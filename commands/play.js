@@ -34,12 +34,19 @@ module.exports = {
 			}
 		}
 
+		if (!video.thumbnails.maxres) {
+			var thumbnail = video.thumbnails.high;
+		}
+		else {
+			var thumbnail = video.thumbnails.maxres
+		}
+
 		const serverQueue = message.client.queue.get(message.guild.id);
 		const song = {
 			id: video.id.replace(/^[a-zA-Z0-9-_]{11}$/),
 			title: video.title,
 			url: 'https://www.youtube.com/watch?v=' + video.id,
-			thumbnail: video.thumbnails.maxres.url,
+			thumbnail: thumbnail.url,
 			publisherChannel: video.channel.title,
 		};
 		console.log(song);
