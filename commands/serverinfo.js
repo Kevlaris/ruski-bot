@@ -1,4 +1,4 @@
-modules.exports = {
+module.exports = {
 	name: 'serverinfo',
 	description: 'Shows server info.',
 	aliases: ['serverinf', 'guildinfo', 'guild'],
