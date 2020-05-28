@@ -1,0 +1,17 @@
+{
+  "name": "ruskibot",
+  "version": "1.0.0",
+  "description": "A Bot for Ruskis",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Kevlaris",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "eslint": "^7.1.0",
+    "ffmpeg-static": "^4.2.2",
+    "simple-youtube-api": "^5.2.1",
+    "ytdl-core": "^2.1.5"
+  }
+}
