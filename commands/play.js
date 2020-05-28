@@ -22,10 +22,11 @@ module.exports = {
 		try {
 			var video = await yt.getVideo(url);
 		}
-		catch (error) {
+		catch {
 			try {
-				var videos = await yt.searchVideos(searchString, 1);
+				const videos = await yt.searchVideos(searchString, 1);
 				var video = await yt.getVideoByID(videos[0].id);
+				console.log(video);
 			}
 			catch (error) {
 				console.error(error);
