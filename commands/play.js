@@ -1,6 +1,6 @@
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
-const { yt_api_key } = require('../config.json');
+const yt_api_key = process.env.yt_api_key;
 
 const yt = new YouTube(yt_api_key);
 
