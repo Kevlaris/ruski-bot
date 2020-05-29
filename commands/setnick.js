@@ -4,7 +4,7 @@ module.exports = {
 	usage: '[member] [new nickname]',
 	async execute(message, args) {
 		const person = message.mentions.users.first();
-		if(!person || args[0]) return message.reply('you need to specify a guild member!');
+		if(!person || !args[0]) return message.reply('you need to specify a guild member!');
 
 		var member;
 
