@@ -5,7 +5,9 @@ module.exports = {
 	description: 'Bans a guild member.',
 	usage: '[member] <reason>',
 	async execute(message, args) {
-		if(!message.member.hasPermission('KICK_MEMBERS')) return message.reply('you don\'t have the proper permissions to kick a member!');
+		if(!message.member.hasPermission('BAN_MEMBERS')) return message.reply('you don\'t have the proper permissions to ban a member!');
+		if(!message.channel.guild.me.hasPermission('BAN_MEMBERS')) return message.reply('I don\'t have the proper permissions to ban this member. Make sure I have the permission to ban!');
+
 
 		const mentioned = message.mentions.users.first();
 		if(!mentioned || !args[0]) return message.reply('you didn\'t mention anyone!');
@@ -29,24 +31,31 @@ module.exports = {
 		var reason = args.splice(1).join(' ');
 		if(!reason) reason = 'Unspecified';
 
-		const kickEmbed = new Discord.MessageEmbed()
-			.setTitle('Member Banned')
-			.addField('Member:', mentioned, true)
-			.addField('Banned by:', message.author, true)
-			.addField('Reason:', reason, true);
-		message.channel.send(kickEmbed);
-
-		const kickedEmbed = new Discord.MessageEmbed()
-			.setTitle(`You were banned from ${message.channel.guild.name}`)
-			.setDescription(reason);
-
 		try {
-			await mentioned.send(kickedEmbed);
-		}
-		catch (error) {
-			console.warn(error);
-		}
 
-		message.channel.guild.members.ban(mentioned);
+			const kickEmbed = new Discord.MessageEmbed()
+				.setTitle('Member Banned')
+				.addField('Member:', mentioned, true)
+				.addField('Banned by:', message.author, true)
+				.addField('Reason:', reason, true);
+			message.channel.send(kickEmbed);
+
+			const kickedEmbed = new Discord.MessageEmbed()
+				.setTitle(`You were banned from ${message.channel.guild.name}`)
+				.setDescription(reason);
+
+			try {
+				await mentioned.send(kickedEmbed);
+			}
+			catch (error) {
+				console.warn(error);
+			}
+
+			message.channel.guild.members.ban(mentioned);
+		}
+		catch (err) {
+			console.error(err);
+			return message.reply('banning process failed.');
+		}
 	},
 };

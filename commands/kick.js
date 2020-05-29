@@ -7,6 +7,8 @@ module.exports = {
 	async execute(message, args) {
 		if(!message.member.hasPermission('KICK_MEMBERS')) return message.reply('you don\'t have the proper permissions to kick a member!');
 
+		if(!message.channel.guild.me.hasPermission('KICK_MEMBERS')) return message.reply('I don\'t have the proper permissions to kick this member. Make sure I have the permission to kick!');
+
 		const mentioned = message.mentions.users.first();
 		if(!mentioned || !args[0]) return message.reply('you didn\'t mention anyone!');
 
@@ -29,24 +31,31 @@ module.exports = {
 		var reason = args.splice(1).join(' ');
 		if(!reason) reason = 'Unspecified';
 
-		const kickEmbed = new Discord.MessageEmbed()
-			.setTitle('Member Kicked')
-			.addField('Member:', mentioned, true)
-			.addField('Kicked by:', message.author, true)
-			.addField('Reason:', reason, true);
-		message.channel.send(kickEmbed);
-
-		const kickedEmbed = new Discord.MessageEmbed()
-			.setTitle(`You were kicked from ${message.channel.guild.name}`)
-			.setDescription(reason);
-
 		try {
-			await mentioned.send(kickedEmbed);
-		}
-		catch (error) {
-			console.warn(error);
-		}
 
-		member.kick(reason);
+			const kickEmbed = new Discord.MessageEmbed()
+				.setTitle('Member Kicked')
+				.addField('Member:', mentioned, true)
+				.addField('Kicked by:', message.author, true)
+				.addField('Reason:', reason, true);
+			message.channel.send(kickEmbed);
+
+			const kickedEmbed = new Discord.MessageEmbed()
+				.setTitle(`You were kicked from ${message.channel.guild.name}`)
+				.setDescription(reason);
+
+			try {
+				await mentioned.send(kickedEmbed);
+			}
+			catch (error) {
+				console.warn(error);
+			}
+
+			member.kick(reason);
+		}
+		catch (err) {
+			console.log(err);
+			return message.reply('kicking process failed.');
+		}
 	},
 };
