@@ -36,11 +36,12 @@ module.exports = {
 			}
 		}
 
+		var thumbnail;
 		if (!video.thumbnails.maxres) {
-			var thumbnail = video.thumbnails.high;
+			thumbnail = video.thumbnails.high;
 		}
 		else {
-			var thumbnail = video.thumbnails.maxres;
+			thumbnail = video.thumbnails.maxres;
 		}
 
 		const serverQueue = message.client.queue.get(message.guild.id);
@@ -104,6 +105,8 @@ module.exports = {
 				.setAuthor(client.user.tag, client.user.displayAvatarURL)
 				.setTitle(`🎶 Now playing: ${song.title}`)
 				.setDescription(`By: ${song.publisherChannel}`)
+				.setThumbnail(thumbnail)
+				.setURL(song.url)
 				.addFields(
 					{ name: 'Duration', value: length, inline: true },
 				)
