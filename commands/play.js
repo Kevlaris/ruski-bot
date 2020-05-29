@@ -1,6 +1,8 @@
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 const yt_api_key = process.env.yt_api_key;
+const Discord = require('discord.js');
+const { client } = require('../index.js');
 
 const yt = new YouTube(yt_api_key);
 
@@ -48,6 +50,9 @@ module.exports = {
 			url: 'https://www.youtube.com/watch?v=' + video.id,
 			thumbnail: thumbnail.url,
 			publisherChannel: video.channel.title,
+			lengthSeconds: video.duration.seconds,
+			lengthMinutes: video.duration.minutes,
+			lengthHours: video.duration.hours,
 		};
 		console.log(song);
 
@@ -83,7 +88,29 @@ module.exports = {
 				})
 				.on('error', error => console.error(error));
 			dispatcher.setVolumeLogarithmic(queue.volume / 5);
-			queue.textChannel.send(`🎶 Start playing: **${song.title}** by **${song.publisherChannel}**\n${song.thumbnail}`);
+
+			var length;
+			if (song.lengthSeconds) {
+				if (song.lengthMinutes) {
+					if(song.lengthHours) {
+						length = `${song.lengthHours}:${song.lengthMinutes}:${song.lengthSeconds}`;
+					}
+					else {length = `${song.lengthMinutes}:${song.lengthSeconds}`;}
+				}
+				else {length = song.lengthSeconds;}
+			}
+
+			const embed = new Discord.MessageEmbed()
+				.setAuthor(client.user.tag, client.user.displayAvatarURL)
+				.setTitle(`🎶 Now playing: ${song.title}`)
+				.setDescription(`By: ${song.publisherChannel}`)
+				.addFields(
+					{ name: 'Duration', value: length, inline: true },
+				)
+				.addFooter(`Requested by: ${message.author.username}`, message.author.displayAvatarURL);
+
+
+			queue.textChannel.send(embed);
 		};
 
 		try {
