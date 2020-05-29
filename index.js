@@ -6,6 +6,7 @@ const token = process.env.token;
 
 const MusicClient = require('./struct/Client');
 const client = new MusicClient({ token: process.env.DISCORD_TOKEN, prefix: process.env.DISCORD_PREFIX });
+module.exports = { client: client };
 
 client.commands = new Discord.Collection();
 
