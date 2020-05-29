@@ -101,27 +101,27 @@ module.exports = {
 			if (song.lengthSeconds) {
 				if (song.lengthMinutes) {
 					if(song.lengthHours) {
-						if (song.lengthSeconds.length === 1 && song.lengthMinutes.length === 1 && song.lengthHours.length === 1) {
+						if (song.lengthSeconds.toString().length === 1 && song.lengthMinutes.toString().length === 1 && song.lengthHours.toString().length === 1) {
 							videoLength = `0${song.lengthHours}:0${song.lengthMinutes}:0${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthSeconds.length === 1 && song.lengthMinutes.length === 1) {
+						else if (song.lengthSeconds.toString().length === 1 && song.lengthMinutes.toString().length === 1) {
 							videoLength = `${song.lengthHours}:0${song.lengthMinutes}:0${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthSeconds.length === 1 && song.lengthHours.length === 1) {
+						else if (song.lengthSeconds.toString().length === 1 && song.lengthHours.toString().length === 1) {
 							videoLength = `0${song.lengthHours}:${song.lengthMinutes}:0${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthHours.length === 1 && song.lengthMinutes.length === 1) {
+						else if (song.lengthHours.toString().length === 1 && song.lengthMinutes.toString().length === 1) {
 							videoLength = `0${song.lengthHours}:0${song.lengthMinutes}:${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthSeconds.length === 1) {
+						else if (song.lengthSeconds.toString().length === 1) {
 							videoLength = `${song.lengthMinutes}:0${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthMinutes.length === 1) {
+						else if (song.lengthMinutes.toString().length === 1) {
 							videoLength = `0${song.lengthMinutes}:${song.lengthSeconds}`;
 						}
 
@@ -131,24 +131,25 @@ module.exports = {
 					}
 
 					else {
-						if (song.lengthSeconds.length === 1 && song.lengthMinutes.length === 1) {
+						if (song.lengthSeconds.toString().length === 1 && song.lengthMinutes.toString().length === 1) {
 							videoLength = `0${song.lengthMinutes}:0${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthSeconds.length === 1) {
+						else if (song.lengthSeconds.toString().length === 1) {
 							videoLength = `${song.lengthMinutes}:0${song.lengthSeconds}`;
 						}
 
-						else if (song.lengthMinutes.length === 1) {
+						else if (song.lengthMinutes.toString().length === 1) {
 							videoLength = `0${song.lengthMinutes}:${song.lengthSeconds}`;
 						}
 
-						else {videoLength = song.lengthSeconds;}
-						{videoLength = `${song.lengthMinutes}:${song.lengthSeconds}`;}
+						else {
+							videoLength = `${song.lengthMinutes}:${song.lengthSeconds}`;
+						}
 					}
 				}
 
-				else if (song.lengthSeconds.length === '1') {
+				else if (song.lengthSeconds.toString().length === 1) {
 					videoLength = `0${song.lengthSeconds}`;
 				}
 
