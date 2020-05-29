@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-exports.module = {
+module.exports = {
 	name: 'kick',
 	description: 'Kicks a guild member.',
 	usage: '[member] <reason>',
