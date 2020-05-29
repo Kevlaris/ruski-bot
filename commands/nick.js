@@ -1,10 +1,19 @@
 module.exports = {
 	name: 'nick',
-	description: 'Sets the bot\'s nickname.',
+	description: 'Sets or resets the bot\'s nickname.',
 	usage: '[new nickname]',
 	execute(message, args) {
 		const nick = args.splice(0).join(' ');
-		if(!nick) return message.reply('you need to specify a new nickname for me!');
+		if(!nick) {
+			try {
+				message.channel.guild.me.setNickname('');
+				return;
+			}
+			catch (err) {
+				message.reply('failed to reset my nickname.');
+				return console.error(err);
+			}
+		}
 
 		if(!message.member.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you don\'t have the permissions to change my nickname.');
 
