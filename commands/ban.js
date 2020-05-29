@@ -51,7 +51,8 @@ module.exports = {
 				console.warn(error);
 			}
 
-			message.channel.guild.members.ban(mentioned);
+			message.channel.guild.members.ban(mentioned, { reason: reason })
+				.then(console.log);
 		}
 		catch (err) {
 			console.error(err);
