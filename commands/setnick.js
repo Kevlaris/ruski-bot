@@ -3,11 +3,13 @@ module.exports = {
 	description: 'Sets a guild member\'s nickname.',
 	usage: '[member] [new nickname]',
 	async execute(message, args) {
-		const person = args[0];
-		if(!person) return message.reply('you need to specify a guild member!');
+		const person = message.mentions.users.first();
+		if(!person || args[0]) return message.reply('you need to specify a guild member!');
+
+		var member;
 
 		try {
-			var member = await message.channel.guild.members.fetch(person);
+			member = await message.channel.guild.members.fetch(person);
 		}
 		catch (error) {
 			member = null;
