@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 module.exports = {
 	name: 'volume',
 	description: 'Set volume (100% is 5, default is 2)',
@@ -13,8 +14,10 @@ module.exports = {
 			if (typeof args[0] === !'number') {
 				return message.channel.send('The value you have specified is not a number');
 			}
-			else if (Number.args[0] >= 100 || Number.args[0] <= 0) {
-				return message.channel.send('The value you have specified is out of range. Specify a value between 0-100.');
+			else {
+				if (Number.args[0] >= 100 || Number.args[0] <= 0) {
+					return message.channel.send('The value you have specified is out of range. Specify a value between 0-100.');
+				}
 			}
 		}
 		serverQueue.volume = args[0];
