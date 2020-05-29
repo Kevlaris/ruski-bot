@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { client } = require('../index.js');
 
 module.exports = {
 	name: 'ban',
@@ -33,19 +34,22 @@ module.exports = {
 
 		try {
 
-			const kickEmbed = new Discord.MessageEmbed()
+			const banEmbed = new Discord.MessageEmbed()
+				.setAuthor(client.user.tag, client.user.avatarURL())
 				.setTitle('Member Banned')
 				.addField('Member:', mentioned, true)
 				.addField('Banned by:', message.author, true)
-				.addField('Reason:', reason, true);
-			message.channel.send(kickEmbed);
+				.addField('Reason:', reason, true)
+				.setFooter('Ban Log');
+			message.channel.send(banEmbed);
 
-			const kickedEmbed = new Discord.MessageEmbed()
+			const bannedEmbed = new Discord.MessageEmbed()
+				.setAuthor(client.user.tag, client.user.avatarURL())
 				.setTitle(`You were banned from ${message.channel.guild.name}`)
 				.setDescription(reason);
 
 			try {
-				await mentioned.send(kickedEmbed);
+				await mentioned.send(bannedEmbed);
 			}
 			catch (error) {
 				console.warn(error);
