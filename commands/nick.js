@@ -6,7 +6,7 @@ module.exports = {
 		const nick = args.splice(0).join(' ');
 		if(!nick) return message.reply('you need to specify a new nickname for me!');
 
-		if(!message.author.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you don\'t have the permissions to change my nickname.');
+		if(!message.member.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you don\'t have the permissions to change my nickname.');
 
 		try {
 			message.channel.guild.me.setNickname(nick);

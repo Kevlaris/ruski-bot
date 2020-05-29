@@ -19,7 +19,7 @@ module.exports = {
 		const nick = args.splice(1).join(' ');
 		if(!nick) return message.reply('you need to specify a new nickname for the guild member!');
 
-		if(!message.author.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you don\'t have the permissions to change the person\'s nickname.');
+		if(!message.member.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you don\'t have the permissions to change the person\'s nickname.');
 		if(!message.channel.guild.me.hasPermission('MANAGE_NICKNAMES' || 'ADMINISTRATOR')) return message.reply('I don\'t have the proper permissions to change nicknames. Make sure I can change other people\'s nicknames!');
 		if(!member.hasPermission('MANAGE_MESSAGES' || 'MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you can\'t kick this member.');
 
