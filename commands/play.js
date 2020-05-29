@@ -107,7 +107,7 @@ module.exports = {
 				.addFields(
 					{ name: 'Duration', value: length, inline: true },
 				)
-				.addFooter(`Requested by: ${message.author.username}`, message.author.displayAvatarURL);
+				.setFooter(`Requested by: ${message.author.username}`, message.author.displayAvatarURL);
 
 
 			queue.textChannel.send(embed);
