@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'kick',
-	description: 'Kicks a guild member.',
+	name: 'ban',
+	description: 'Bans a guild member.',
 	usage: '[member] <reason>',
 	async execute(message, args) {
 		if(!message.member.hasPermission('KICK_MEMBERS')) return message.reply('you don\'t have the proper permissions to kick a member!');
@@ -23,21 +23,21 @@ module.exports = {
 		if(!member) return message.reply('I couldn\'t find the specified member.');
 
 		if(message.author === !message.channel.guild.owner) {
-			if(member.hasPermission('MANAGE_MESSAGES' || 'MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you can\'t kick this member.');
+			if(member.hasPermission('MANAGE_MESSAGES' || 'MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you can\'t ban this member.');
 		}
 
 		var reason = args.splice(1).join(' ');
 		if(!reason) reason = 'Unspecified';
 
 		const kickEmbed = new Discord.MessageEmbed()
-			.setTitle('Member Kicked')
+			.setTitle('Member Banned')
 			.addField('Member:', mentioned, true)
-			.addField('Kicked by:', message.author, true)
+			.addField('Banned by:', message.author, true)
 			.addField('Reason:', reason, true);
 		message.channel.send(kickEmbed);
 
 		const kickedEmbed = new Discord.MessageEmbed()
-			.setTitle(`You were kicked from ${message.channel.guild.name}`)
+			.setTitle(`You were banned from ${message.channel.guild.name}`)
 			.setDescription(reason);
 
 		try {
@@ -47,6 +47,6 @@ module.exports = {
 			console.warn(error);
 		}
 
-		member.kick(reason);
+		message.channel.guild.members.ban(mentioned);
 	},
 };
