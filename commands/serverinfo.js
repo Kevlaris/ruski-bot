@@ -11,7 +11,7 @@ module.exports = {
 		const guild = message.channel.guild;
 
 		const embed = new Discord.MessageEmbed()
-			.setAuthor(client.user.tag, client.user.avatarURL)
+			.setAuthor(client.user.tag, client.user.avatarURL())
 			.setTitle(guild.name)
 			.setDescription('Server Information')
 			.addFields(
@@ -21,7 +21,5 @@ module.exports = {
 			)
 			.setFooter('Server Information');
 		message.channel.send(embed);
-		console.log(guild.icon);
-		console.log(client.user.avatarURL());
 	},
 };

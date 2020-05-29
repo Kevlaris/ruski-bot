@@ -102,7 +102,7 @@ module.exports = {
 			}
 
 			const embed = new Discord.MessageEmbed()
-				.setAuthor(client.user.tag, client.user.displayAvatarURL)
+				.setAuthor(client.user.tag, client.user.avatarURL())
 				.setTitle(`🎶 Now playing: ${song.title}`)
 				.setDescription(`By: ${song.publisherChannel}`)
 				.setThumbnail(song.thumbnail)
@@ -110,7 +110,7 @@ module.exports = {
 				.addFields(
 					{ name: 'Duration', value: length, inline: true },
 				)
-				.setFooter(`Requested by: ${message.author.username}`, message.author.displayAvatarURL);
+				.setFooter(`Requested by: ${message.author.username}`, message.author.avatarURL());
 
 
 			queue.textChannel.send(embed);
