@@ -22,10 +22,11 @@ module.exports = {
 		try {
 			var video = await yt.getVideo(url);
 		}
-		catch (error) {
+		catch {
 			try {
-				var videos = await yt.searchVideos(searchString, 1);
+				const videos = await yt.searchVideos(searchString, 1);
 				var video = await yt.getVideoByID(videos[0].id);
+				console.log(video);
 			}
 			catch (error) {
 				console.error(error);
@@ -33,12 +34,19 @@ module.exports = {
 			}
 		}
 
+		if (!video.thumbnails.maxres) {
+			var thumbnail = video.thumbnails.high;
+		}
+		else {
+			var thumbnail = video.thumbnails.maxres
+		}
+
 		const serverQueue = message.client.queue.get(message.guild.id);
 		const song = {
 			id: video.id.replace(/^[a-zA-Z0-9-_]{11}$/),
 			title: video.title,
 			url: 'https://www.youtube.com/watch?v=' + video.id,
-			thumbnail: video.thumbnails.maxres.url,
+			thumbnail: thumbnail.url,
 			publisherChannel: video.channel.title,
 		};
 		console.log(song);
