@@ -6,7 +6,7 @@ module.exports = {
 	name: 'info',
 	description: 'Shows info about the bot.',
 	execute(message) {
-		const embed = new Discord.MessageEmbed
+		const embed = new Discord.MessageEmbed()
 			.setTitle('Info')
 			.addFields(
 				{ name: 'Bot\'s name', value: botName, inline: true },
