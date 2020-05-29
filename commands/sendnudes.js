@@ -1,4 +1,5 @@
 module.exports = {
+	name: 'sendnudes',
 	async execute(message, args) {
 		const defaultNude = 'Someone just wanted to send you a nude.. watch out for your friends! ;3';
 
@@ -19,7 +20,8 @@ module.exports = {
 		if(!nudes) {
 			try {
 				return mentioned.send(defaultNude);
-			} catch (warning) {
+			}
+			catch (warning) {
 				message.reply('I couldn\'t reach the specified member.');
 				return console.warn(warning);
 			}
