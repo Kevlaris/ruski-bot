@@ -105,7 +105,7 @@ module.exports = {
 				.setAuthor(client.user.tag, client.user.displayAvatarURL)
 				.setTitle(`🎶 Now playing: ${song.title}`)
 				.setDescription(`By: ${song.publisherChannel}`)
-				.setThumbnail(thumbnail)
+				.setThumbnail(song.thumbnail)
 				.setURL(song.url)
 				.addFields(
 					{ name: 'Duration', value: length, inline: true },
