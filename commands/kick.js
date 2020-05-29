@@ -10,7 +10,7 @@ module.exports = {
 		const mentioned = message.mentions.users.first();
 		if(!mentioned || !args[0]) return message.reply('you didn\'t mention anyone!');
 
-		var member
+		var member;
 
 		try {
 			member = await message.channel.guild.members.fetch(mentioned);
@@ -27,9 +27,9 @@ module.exports = {
 
 		const kickEmbed = new Discord.MessageEmbed()
 			.setTitle('Member Kicked')
-			.setField('Member:', mentioned, true)
-			.setField('Kicked by:', message.author, true)
-			.setField('Reason:', reason, true);
+			.addField('Member:', mentioned, true)
+			.addField('Kicked by:', message.author, true)
+			.addField('Reason:', reason, true);
 		message.channel.send(kickEmbed);
 
 		const kickedEmbed = new Discord.MessageEmbed()
