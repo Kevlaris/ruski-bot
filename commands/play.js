@@ -38,7 +38,7 @@ module.exports = {
 			var thumbnail = video.thumbnails.high;
 		}
 		else {
-			var thumbnail = video.thumbnails.maxres
+			var thumbnail = video.thumbnails.maxres;
 		}
 
 		const serverQueue = message.client.queue.get(message.guild.id);
