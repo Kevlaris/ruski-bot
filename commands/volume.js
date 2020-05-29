@@ -14,11 +14,6 @@ module.exports = {
 			if (typeof args[0] === !'number') {
 				return message.channel.send('The value you have specified is not a number');
 			}
-			else {
-				if (Number.args[0] >= 100 || Number.args[0] <= 0) {
-					return message.channel.send('The value you have specified is out of range. Specify a value between 0-100.');
-				}
-			}
 		}
 		serverQueue.volume = args[0];
 		serverQueue.connection.dispatcher.setVolumeLogarithmic(args[0] / 5);
