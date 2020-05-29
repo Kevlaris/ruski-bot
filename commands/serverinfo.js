@@ -20,7 +20,9 @@ module.exports = {
 				{ name: 'Region', value: guild.region, inline: true },
 			)
 			.setFooter('Server Information');
+		if(guild.icon) embed.setThumbnail(guild.icon);
 		message.channel.send(embed);
 		console.log(guild.icon);
+		console.log(client.user.avatarURL);
 	},
 };
