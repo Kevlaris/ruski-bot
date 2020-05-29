@@ -12,7 +12,7 @@ module.exports = {
 		const embed = new Discord.MessageEmbed()
 			.setAuthor(client.user.tag, client.user.avatarURL())
 			.setTitle('Server Queue')
-			.setDescription(serverQueue.songs.map(song => `**-** ${song.title}`).join('\n'))
+			.setDescription(serverQueue.songs.map(song => `**-** **${song.title}**, Published by: *${song.publisherChannel}*`).join('\n'))
 			.setFooter('Server Queue');
 
 		return message.channel.send(embed);

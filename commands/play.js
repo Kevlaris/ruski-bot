@@ -59,8 +59,15 @@ module.exports = {
 
 		if (serverQueue) {
 			serverQueue.songs.push(song);
-			console.log(serverQueue.songs);
-			return message.channel.send(`✅ **${song.title}** has been added to the queue!`);
+
+			const queueEmbed = new Discord.MessageEmbed()
+				.setAuthor(client.user.tag, client.user.avatarURL())
+				.setTitle(`✅ ${song.title} Has been added to the queue!`)
+				.setDescription(`Uploaded By: ${song.publisherChannel}`)
+				.setURL(song.url)
+				.setFooter(`Added by: ${message.author.tag}`, message.author.avatarURL());
+
+			return message.channel.send(queueEmbed);
 		}
 
 		const queueConstruct = {
@@ -90,15 +97,62 @@ module.exports = {
 				.on('error', error => console.error(error));
 			dispatcher.setVolumeLogarithmic(queue.volume / 5);
 
-			var length;
+			var videoLength;
 			if (song.lengthSeconds) {
 				if (song.lengthMinutes) {
 					if(song.lengthHours) {
-						length = `${song.lengthHours}:${song.lengthMinutes}:${song.lengthSeconds}`;
+						if (song.lengthSeconds.length === '1' && song.lengthMinutes.length === '1' && song.lengthHours.length === '1') {
+							videoLength = `0${song.lengthHours}:0${song.lengthMinutes}:0${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthSeconds.length === '1' && song.lengthMinutes.length === '1') {
+							videoLength = `${song.lengthHours}:0${song.lengthMinutes}:0${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthSeconds.length === '1' && song.lengthHours.length === '1') {
+							videoLength = `0${song.lengthHours}:${song.lengthMinutes}:0${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthHours.length === '1' && song.lengthMinutes.length === '1') {
+							videoLength = `0${song.lengthHours}:0${song.lengthMinutes}:${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthSeconds.length === '1') {
+							videoLength = `${song.lengthMinutes}:0${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthMinutes.length === '1') {
+							videoLength = `0${song.lengthMinutes}:${song.lengthSeconds}`;
+						}
+
+						else {
+							videoLength = `${song.lengthHours}:${song.lengthMinutes}:${song.lengthSeconds}`;
+						}
 					}
-					else {length = `${song.lengthMinutes}:${song.lengthSeconds}`;}
+
+					else {
+						if (song.lengthSeconds.length === '1' && song.lengthMinutes.length === '1') {
+							videoLength = `0${song.lengthMinutes}:0${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthSeconds.length === '1') {
+							videoLength = `${song.lengthMinutes}:0${song.lengthSeconds}`;
+						}
+
+						else if (song.lengthMinutes.length === '1') {
+							videoLength = `0${song.lengthMinutes}:${song.lengthSeconds}`;
+						}
+
+						else {videoLength = song.lengthSeconds;}
+						{videoLength = `${song.lengthMinutes}:${song.lengthSeconds}`;}
+					}
 				}
-				else {length = song.lengthSeconds;}
+
+				else if (song.lengthSeconds.length === '1') {
+					videoLength = `0${song.lengthSeconds}`;
+				}
+
+				else {videoLength = song.lengthSeconds;}
 			}
 
 			const embed = new Discord.MessageEmbed()
@@ -108,7 +162,7 @@ module.exports = {
 				.setThumbnail(song.thumbnail)
 				.setURL(song.url)
 				.addFields(
-					{ name: 'Duration', value: length, inline: true },
+					{ name: 'Duration', value: videoLength, inline: true },
 				)
 				.setFooter(`Requested by: ${message.author.username}`, message.author.avatarURL());
 
