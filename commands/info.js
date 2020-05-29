@@ -7,6 +7,7 @@ module.exports = {
 	description: 'Shows info about the bot.',
 	execute(message) {
 		const embed = new Discord.MessageEmbed()
+			.setAuthor(client.user.tag, client.user.displayAvatarURL)
 			.setTitle('Info')
 			.addFields(
 				{ name: 'Bot\'s name', value: botName, inline: true },
