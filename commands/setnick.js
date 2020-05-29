@@ -22,7 +22,7 @@ module.exports = {
 		if(!nick) {
 			try {
 				member.setNickname('');
-				return;
+				return message.channel.send(`I've reset **${person}**'s nickname.`);
 			}
 			catch (err) {
 				message.reply(`failed to reset **${person}**'s nickname.`);

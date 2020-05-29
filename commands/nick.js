@@ -7,7 +7,7 @@ module.exports = {
 		if(!nick) {
 			try {
 				message.channel.guild.me.setNickname('');
-				return;
+				return message.channel.send('I\'ve reset my nickname.');
 			}
 			catch (err) {
 				message.reply('failed to reset my nickname.');
