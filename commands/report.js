@@ -24,7 +24,7 @@ module.exports = {
 		const reason = args.splice(1).join(' ');
 
 		const serverLogChannel = message.client.logChannels.get(message.channel.guild.id);
-		if(!serverLogChannel.logChannel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
+		if(!serverLogChannel || !serverLogChannel.logChannel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
 
 		const serverReports = message.channel.guild.client.reports.get(message.channel.guild.id);
 
