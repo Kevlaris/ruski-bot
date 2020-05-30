@@ -21,6 +21,7 @@ module.exports = {
 		if(serverLogChannel) {
 			try {
 				serverLogChannel.logChannel.push(logChannel);
+				serverLogChannel.logChannel.send('This is the new log channel.');
 				return message.channel.send(`The new log channel is **${logChannel}**.`);
 			}
 			catch (err) {
@@ -43,6 +44,7 @@ module.exports = {
 			return console.error(error);
 		}
 
+		serverLogChannel.logChannel.send('This is the new log channel.');
 		message.channel.send(`The new log channel is **${logChannel}**.`);
 	},
 };
