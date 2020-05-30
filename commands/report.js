@@ -24,7 +24,7 @@ module.exports = {
 		const reason = args.splice(1).join(' ');
 
 		const serverLogChannel = message.client.logChannels.get(message.channel.guild.id);
-		if(!serverLogChannel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
+		if(!serverLogChannel.logChannel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
 
 		const serverReports = message.channel.guild.client.reports.get(message.channel.guild.id);
 
@@ -51,7 +51,7 @@ module.exports = {
 				)
 				.setFooter('Report Log');
 
-			return serverLogChannel.send(logEmbed);
+			return serverLogChannel.logChannel.send(logEmbed);
 		}
 
 		const reportsConstruct = {
@@ -62,6 +62,19 @@ module.exports = {
 
 		try {
 			reportsConstruct.reports.push(report);
+			const logEmbed = new Discord.MessageEmbed()
+				.setAuthor(client.user.tag, client.user.avatarURL())
+				.setTitle('Report')
+				.setDescription(message.channel.guild.name)
+				.addFields(
+					{ name: 'Reported person', value: mentioned, inline: true },
+					{ name: 'Reported by', value: message.author, inline: true },
+					{ name: 'Channel', value: message.channel, inline: true },
+					{ name: 'Reason', value: reason, inline: false },
+				)
+				.setFooter('Report Log');
+
+			serverLogChannel.logChannel.send(logEmbed);
 		}
 		catch (err) {
 			message.reply('there was an error making the report.');

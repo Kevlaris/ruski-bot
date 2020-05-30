@@ -15,9 +15,12 @@ module.exports = {
 			return message.reply('you need to specify a channel.');
 		}
 
+		const logChannelsConstruct = {
+			logChannel: logChannel,
+		};
+
 		try {
-			message.client.logChannels.set(message.channel.guild.id, logChannel);
-			console.log(logChannel);
+			message.client.logChannels.set(message.channel.guild.id, logChannelsConstruct);
 		}
 		catch (error) {
 			message.reply('failed to change the log channel');
