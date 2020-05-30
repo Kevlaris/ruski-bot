@@ -44,7 +44,7 @@ module.exports = {
 			return console.error(error);
 		}
 
-		serverLogChannel.logChannel.send('This is the new log channel.');
+		message.client.logChannels.get(message.guild.id).logChannel.send('This is the new log channel.');
 		message.channel.send(`The new log channel is **${logChannel}**.`);
 	},
 };
