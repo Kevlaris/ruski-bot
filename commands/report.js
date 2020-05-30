@@ -51,7 +51,7 @@ module.exports = {
 				)
 				.setFooter('Report Log');
 
-			return message.guild.channels.resolve(serverLogChannel.logChannel).send(logEmbed);
+			return serverLogChannel.logChannel.send(logEmbed);
 		}
 
 		const reportsConstruct = {
@@ -74,7 +74,7 @@ module.exports = {
 				)
 				.setFooter('Report Log');
 
-			message.guild.channels.resolve(serverLogChannel.logChannel).send(logEmbed);
+			serverLogChannel.logChannel.send(logEmbed);
 		}
 		catch (err) {
 			message.reply('there was an error making the report.');
