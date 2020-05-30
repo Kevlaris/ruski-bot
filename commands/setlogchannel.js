@@ -38,7 +38,7 @@ module.exports = {
 			message.client.logChannels.set(message.channel.guild.id, logChannelsConstruct);
 			console.log(logChannels);
 			console.log(logChannels.logChannel);
-			console.log(message.guild.channels.resolve(serverLogChannel.logChannel));
+			console.log(message.guild.channels.resolve(logChannels.get(message.guild.id).logChannel));
 		}
 		catch (error) {
 			message.reply('failed to change the log channel');
