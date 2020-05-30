@@ -26,8 +26,6 @@ module.exports = {
 		const serverLogChannel = message.client.logChannels.get(message.channel.guild.id);
 		if(!serverLogChannel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
 
-		if(!serverLogChannel.guild.me.hasPermission('VIEW_CHANNEL' || 'SEND_MESSAGES')) return message.reply('I can\'t send messages into the log channel. Please make sure I have the proper permissions!');
-
 		const serverReports = message.channel.guild.client.reports.get(message.channel.guild.id);
 
 		const report = {
