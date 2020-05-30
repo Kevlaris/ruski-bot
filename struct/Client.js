@@ -9,9 +9,9 @@ module.exports = class extends Client {
 		this.commands = new Collection();
 
 		this.queue = new Map();
-		
+
 		this.reports = new Map();
-		
+
 		this.logChannels = new Map();
 
 		this.config = config;

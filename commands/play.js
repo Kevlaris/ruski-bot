@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 const yt_api_key = process.env.yt_api_key;

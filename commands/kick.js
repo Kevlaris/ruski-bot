@@ -20,7 +20,7 @@ module.exports = {
 		}
 		catch (error) {
 			member = null;
-			console.log(error);
+			console.error(error);
 		}
 
 		if(!member) return message.reply('I couldn\'t find the specified member.');
