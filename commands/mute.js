@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const [ client ] = 
+const [ client ] = require('../index.js');
 
 module.exports = {
 	name: 'mute',
