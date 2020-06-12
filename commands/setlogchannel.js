@@ -36,7 +36,7 @@ module.exports = {
 		};
 
 		try {
-			message.client.logChannels.set(message.channel.guild.id, logChannelsConstruct);
+			logChannels.set(message.channel.guild.id, logChannelsConstruct);
 			console.log(logChannels);
 			console.log(logChannels.logChannel);
 			console.log(logChannels.get(message.guild.id).logChannel);

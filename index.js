@@ -3,8 +3,8 @@ const { prefix, botName, botAuthor } = require('./config.json');
 const Discord = require('discord.js');
 const token = process.env.token;
 
-const MusicClient = require('./struct/Client');
-const client = new MusicClient({ token: process.env.DISCORD_TOKEN, prefix: process.env.DISCORD_PREFIX });
+const botClient = require('./struct/Client');
+const client = new botClient({ token: process.env.DISCORD_TOKEN, prefix: prefix });
 module.exports = { client: client };
 
 client.commands = new Discord.Collection();
