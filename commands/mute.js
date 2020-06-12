@@ -38,7 +38,7 @@ module.exports = {
 		const muterole = guild.roles.cache.find(role => role.name === 'Muted');
 		if (muterole) {
 			try {
-				mentioned.roles.add(muterole);
+				member.roles.add(muterole);
 
 				try {
 					mentioned.send(`You were muted in **${guild.name}**.`);
@@ -75,5 +75,34 @@ module.exports = {
 				position: 1,
 			},
 		});
+
+		try {
+			member.roles.add(muterole);
+		}
+		catch (er) {
+			message.reply(`I couldn't set the role to ${mentioned}.`);
+			return console.error(er);
+		}
+
+
+		try {
+			mentioned.send(`You were muted in **${guild.name}**.`);
+			mentioned.send(`Reason: *${reason}*`);
+		}
+		catch (warn) {
+			console.warn(warn);
+		}
+
+		const embed = new Discord.MessageEmbed()
+			.setAuthor(client.user.tag, client.user.avatarURL())
+			.setTitle('Member Muted')
+			.addFields(
+				{ name: 'Member', value: mentioned, inline: true },
+				{ name: 'Reason', value: reason, inline: true },
+				{ name: 'Muted by', value: message.author, inline: true },
+			)
+			.setFooter('Mute Log');
+
+		return message.channel.send(embed);
 	},
 };
