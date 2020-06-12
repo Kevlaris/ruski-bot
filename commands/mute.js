@@ -9,7 +9,7 @@ module.exports = {
 	async execute(message, args) {
 		const guild = message.guild;
 
-        if(!message.member.hasPermission('MUTE_MEMBERS' || 'ADMINISTRATOR')) return message.reply('you don\'t have the proper permissions to manage roles!');
+		if(!message.member.hasPermission('MUTE_MEMBERS' || 'ADMINISTRATOR')) return message.reply('you don\'t have the proper permissions to manage roles!');
 
 		if(!message.channel.guild.me.hasPermission('ADMINISTRATOR' || 'MANAGE_MEMBERS' || 'MANAGE_ROLES')) return message.reply('I don\'t have the proper permissions to manage roles. Make sure I have the permissions!');
 
@@ -72,6 +72,7 @@ module.exports = {
 				color: 'DEFAULT',
 				hoist: false,
 				permissions: [ 'VIEW_CHANNEL', 'CONNECT', 'READ_MESSAGE_HISTORY' ],
+				position: 1,
 			},
 		});
 	},

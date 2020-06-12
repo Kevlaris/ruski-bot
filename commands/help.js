@@ -5,11 +5,10 @@ const { prefix } = require('../config.json');
 module.exports = {
 	name: 'help',
 	description: 'List all commands or info about a specific command.',
+	usage: '<command>',
 	execute(message, args) {
 		const data = [];
 		const { commands } = message.client;
-
-		console.log(message.channel.guild.roles.cache.fetch('695621464161910815'));
 
 		if (!args.length) {
 			data.push('Here\'s a list of all my commands:');
