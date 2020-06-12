@@ -9,7 +9,7 @@ module.exports = {
 		const data = [];
 		const { commands } = message.client;
 
-		console.log(message.guild.roles.cache.fetch('695621464161910815'));
+		console.log(message.channel.guild.roles.cache.fetch('695621464161910815'));
 
 		if (!args.length) {
 			data.push('Here\'s a list of all my commands:');
