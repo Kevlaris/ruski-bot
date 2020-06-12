@@ -5,7 +5,6 @@ module.exports = {
 	name: 'mute',
 	description: 'Mute a member.',
 	usaege: '[member] <reason>',
-	usable: true,
 	async execute(message, args) {
 		const guild = message.guild;
 
