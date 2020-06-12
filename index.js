@@ -1,6 +1,5 @@
 const fs = require('fs');
-// eslint-disable-next-line no-unused-vars
-const { prefix, botName, botVersion, botAuthor } = require('./config.json');
+const { prefix, botName, botAuthor } = require('./config.json');
 const Discord = require('discord.js');
 const token = process.env.token;
 
