@@ -38,6 +38,8 @@ client.on('message', async message => {
 
 	if (!command) return;
 
+	if (command.usable == false) return message.reply('this command is not usable.');
+
 	try {
 		command.execute(message, args);
 	}

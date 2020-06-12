@@ -2,6 +2,7 @@ module.exports = {
 	name: 'setlogchannel',
 	description: 'Sets the log channel in the server.',
 	usage: '[channel]',
+	usable: false,
 	execute(message, args) {
 		if(!message.member.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) {
 			return message.reply('you don\'t have the permissions to change the log channel.');

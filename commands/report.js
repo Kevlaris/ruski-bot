@@ -5,6 +5,7 @@ module.exports = {
 	name: 'report',
 	description: 'Reports a guild member.',
 	usage: '[@member] [reason]',
+	usable: false,
 	async execute(message, args) {
 		const mentioned = message.mentions.users.first();
 		if(!mentioned || !args[0]) return message.reply('you need to specify a member to report!');
