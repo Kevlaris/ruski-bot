@@ -1,12 +1,12 @@
 const fs = require('fs');
-const { prefix, botName, botAuthor } = require('./config.json');
+const { botName, botAuthor } = require('./config.json');
 const Discord = require('discord.js');
 let token = process.env.token;
 
 if (token == null) token = require('./config_private.json').token;
 
 const botClient = require('./struct/Client');
-const client = new botClient({ token: token, prefix: prefix });
+const client = new botClient({ token: token });
 module.exports = { client: client };
 
 client.commands = new Discord.Collection();
@@ -29,6 +29,16 @@ client.once('ready', () => {
 });
 
 client.on('message', async message => {
+
+
+	const prefixes = JSON.parse(fs.readFileSync('./prefixes.json', 'utf8'));
+	if (!prefixes[message.guild.id]) {
+		prefixes[message.guild.id] = {
+			prefixes: require('./config.json').prefix,
+		};
+	}
+	const prefix = prefixes[message.guild.id].prefixes;
+
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).split(/ +/);
