@@ -1,10 +1,12 @@
 const fs = require('fs');
 const { prefix, botName, botAuthor } = require('./config.json');
 const Discord = require('discord.js');
-const token = process.env.token;
+let token = process.env.token;
+
+if (token == null) token = require('./config_private.json').token;
 
 const botClient = require('./struct/Client');
-const client = new botClient({ token: process.env.DISCORD_TOKEN, prefix: prefix });
+const client = new botClient({ token: token, prefix: prefix });
 module.exports = { client: client };
 
 client.commands = new Discord.Collection();

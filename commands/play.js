@@ -1,7 +1,10 @@
 /* eslint-disable no-lonely-if */
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
-const yt_api_key = process.env.yt_api_key;
+let yt_api_key = process.env.yt_api_key;
+
+if (yt_api_key == null) yt_api_key = require('../config_private.json').yt_api_key;
+
 const Discord = require('discord.js');
 const { client } = require('../index.js');
 

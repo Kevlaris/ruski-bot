@@ -2,5 +2,6 @@
 	"prefix": "!",
     "botName": "Ruski Bot",
     "botVersion": "1.1.6",
-    "botAuthor": "Kevlaris"
+    "botAuthor": "Kevlaris",
+    "invLink": "https://discordapp.com/oauth2/authorize?client_id=668842700761726997&scope=bot&permissions=8"
 }
