@@ -32,12 +32,12 @@ client.on('message', async message => {
 
 
 	const prefixes = JSON.parse(fs.readFileSync('./prefixes.json', 'utf8'));
-	if (!prefixes[message.guild.id]) {
-		prefixes[message.guild.id] = {
+	if (!prefixes[message.channel.guild.id]) {
+		prefixes[message.channel.guild.id] = {
 			prefixes: require('./config.json').prefix,
 		};
 	}
-	const prefix = prefixes[message.guild.id].prefixes;
+	const prefix = prefixes[message.channel.guild.id].prefixes;
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
