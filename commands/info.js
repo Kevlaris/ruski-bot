@@ -1,4 +1,4 @@
-const { botAuthor, botName, botVersion } = require('../config.json');
+const { botAuthor, botName, botVersion } = require('../data/config.json');
 const Discord = require('discord.js');
 const { client } = require('../index.js');
 

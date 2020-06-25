@@ -5,10 +5,10 @@ module.exports = {
 	description: 'Shows or sets the bot\'s prefix for this guild.',
 	usage: '(prefix)',
 	async execute(message, args) {
-		const prefixes = JSON.parse(fs.readFileSync('prefixes.json', 'utf8'));
+		const prefixes = JSON.parse(fs.readFileSync('./data/prefixes.json', 'utf8'));
 		if (!prefixes[message.guild.id]) {
 			prefixes[message.guild.id] = {
-				prefixes: require('../config.json').prefix,
+				prefixes: require('./data/config.json').prefix,
 			};
 		}
 		const prefix = prefixes[message.guild.id].prefixes;
@@ -20,7 +20,7 @@ module.exports = {
 			prefixes: args[0],
 		};
 
-		fs.writeFile('prefixes.json', JSON.stringify(prefixes), (error) => {
+		fs.writeFile('./data/prefixes.json', JSON.stringify(prefixes), (error) => {
 			if(error) console.error(error);
 		});
 

@@ -2,51 +2,53 @@ module.exports = {
 	name: 'setlogchannel',
 	description: 'Sets the log channel in the server.',
 	usage: '[channel]',
-	usable: false,
+	usable: true,
 	execute(message, args) {
 		if(!message.member.hasPermission('MANAGE_SERVER' || 'ADMINISTRATOR')) {
 			return message.reply('you don\'t have the permissions to change the log channel.');
 		}
 
-		const logChannel = args[0];
-		if(!logChannel) {
+		const logChannel_raw = args[0];
+		if(!logChannel_raw) {
 			return message.reply('you need to specify a channel.');
 		}
-		if(logChannel.type === !'Channel') {
+		if(logChannel_raw.type === !'Channel') {
 			return message.reply('you need to specify a channel.');
 		}
+
+		const guild = message.channel.guild;
+
+		const logChannel_id = logChannel_raw.substring(2, logChannel_raw.length - 1);
+
+		const logChannel = guild.channels.cache.get(logChannel_id);
 
 		const logChannels = message.client.logChannels;
 
-		const serverLogChannel = logChannels.get(message.guild.id);
-		if(serverLogChannel) {
+		if(logChannels[guild.id]) {
 			try {
-				serverLogChannel.logChannel.push(logChannel);
-				serverLogChannel.logChannel.send('This is the new log channel.');
-				return message.channel.send(`The new log channel is **${logChannel}**.`);
+				message.client.logChannels[guild.id].channel = logChannel;
+				message.client.logChannels = logChannels;
+				logChannel.send('This channel is the new log channel for this guild.');
+				return message.channel.send(`The new log channel for this guild is ${logChannel_raw}.`);
 			}
-			catch (err) {
-				message.reply('failed to change the log channel');
-				return console.error(err);
+			catch (error) {
+				message.reply('I couldn\'t set the log channel.');
+				return console.error(error);
 			}
 		}
 
 		const logChannelsConstruct = {
-			logChannel: logChannel,
+			channel: logChannel,
 		};
 
 		try {
-			logChannels.set(message.channel.guild.id, logChannelsConstruct);
-			console.log(logChannels);
-			console.log(logChannels.logChannel);
-			console.log(logChannels.get(message.guild.id).logChannel);
+			logChannels.set(guild.id, logChannelsConstruct);
+			logChannel.send('This channel is the new log channel for this guild.');
+			return message.channel.send(`The new log channel for this guild is ${logChannel_raw}.`);
 		}
 		catch (error) {
-			message.reply('failed to change the log channel');
+			message.reply('I couldn\'t set the log channel.');
 			return console.error(error);
 		}
-
-		message.client.logChannels.get(message.guild.id).logChannel.send('This is the new log channel.');
-		message.channel.send(`The new log channel is **${logChannel}**.`);
 	},
 };

@@ -5,12 +5,12 @@ module.exports = {
 	name: 'report',
 	description: 'Reports a guild member.',
 	usage: '[@member] [reason]',
-	usable: false,
+	usable: true,
 	async execute(message, args) {
 		const mentioned = message.mentions.users.first();
 		if(!mentioned || !args[0]) return message.reply('you need to specify a member to report!');
 
-		var member;
+		let member;
 
 		try {
 			member = await message.channel.guild.members.fetch(mentioned);
@@ -22,12 +22,17 @@ module.exports = {
 
 		if(!member) return message.reply('I couldn\'t find the specified member.');
 
-		const reason = args.splice(1).join(' ');
+		let reason = args.splice(1).join(' ');
+		if(!reason) reason = 'Undefined';
 
-		const serverLogChannel = message.client.logChannels.get(message.channel.guild.id);
-		if(!serverLogChannel || !serverLogChannel.logChannel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
+		const logChannels = message.client.logChannels;
+		console.log(logChannels);
+		const serverLogChannel = logChannels.get(message.guild.id);
+		console.log(serverLogChannel);
+		// if(!serverLogChannel || !serverLogChannel.channel) return message.reply('I can\'t detect a log channel in your guild. Ask an administrator to set a log channel.');
 
-		const serverReports = message.channel.guild.client.reports.get(message.channel.guild.id);
+		const reports = message.client.reports;
+		const serverReports = reports.get(message.guild.id);
 
 		const report = {
 			reported: member,
@@ -36,7 +41,38 @@ module.exports = {
 		};
 
 		if(serverReports) {
-			serverReports.reports.push(report);
+			try {
+				serverReports.reports.push(report);
+
+				message.channel.send('**Report added!**');
+
+				const logEmbed = new Discord.MessageEmbed()
+					.setAuthor(client.user.tag, client.user.avatarURL())
+					.setTitle('Report')
+					.setDescription(message.channel.guild.name)
+					.addFields(
+						{ name: 'Reported person', value: mentioned, inline: true },
+						{ name: 'Reported by', value: message.author, inline: true },
+						{ name: 'Channel', value: message.channel, inline: true },
+						{ name: 'Reason', value: reason, inline: false },
+					)
+					.setFooter('Report Log');
+
+				return message.guild.channels.cache.get(serverLogChannel.channel).send(logEmbed);
+			}
+			catch (error) {
+				return console.error(error);
+			}
+		}
+
+		const reportsConstruct = {
+			reports: [],
+		};
+
+		message.client.reports.set(message.channel.guild.id, reportsConstruct);
+
+		try {
+			reportsConstruct.reports.push(report);
 
 			message.channel.send('**Report added!**');
 
@@ -52,30 +88,7 @@ module.exports = {
 				)
 				.setFooter('Report Log');
 
-			return serverLogChannel.logChannel.send(logEmbed);
-		}
-
-		const reportsConstruct = {
-			reports: [],
-		};
-
-		message.client.reports.set(message.channel.guild.id, reportsConstruct);
-
-		try {
-			reportsConstruct.reports.push(report);
-			const logEmbed = new Discord.MessageEmbed()
-				.setAuthor(client.user.tag, client.user.avatarURL())
-				.setTitle('Report')
-				.setDescription(message.channel.guild.name)
-				.addFields(
-					{ name: 'Reported person', value: mentioned, inline: true },
-					{ name: 'Reported by', value: message.author, inline: true },
-					{ name: 'Channel', value: message.channel, inline: true },
-					{ name: 'Reason', value: reason, inline: false },
-				)
-				.setFooter('Report Log');
-
-			serverLogChannel.logChannel.send(logEmbed);
+			message.guild.channels.cache.get(serverLogChannel.channel.id).send(logEmbed);
 		}
 		catch (err) {
 			message.reply('there was an error making the report.');

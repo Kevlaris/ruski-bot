@@ -1,11 +1,11 @@
 {
   "name": "ruskibot",
-  "version": "1.0.0",
+  "version": "1.1.7",
   "description": "A Bot for Ruskis",
   "main": "index.js",
   "keywords": [],
   "author": "Kevlaris",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
