@@ -4,7 +4,7 @@ module.exports = {
 	name: 'prefix',
 	description: 'Shows or sets the bot\'s prefix for this guild.',
 	usage: '(prefix)',
-	async execute(message, args) {
+	execute(message, args) {
 		const prefixes = JSON.parse(fs.readFileSync('./data/prefixes.json', 'utf8'));
 		if (!prefixes[message.guild.id]) {
 			prefixes[message.guild.id] = {

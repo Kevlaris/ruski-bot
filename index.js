@@ -1,6 +1,8 @@
 const fs = require('fs');
-const { botName, botAuthor } = require('./data/config.json');
+const { botName, botAuthor, botVersion } = require('./data/config.json');
 const Discord = require('discord.js');
+const dateFormat = require('dateformat');
+
 let token = process.env.token;
 
 if (token == null) token = require('./data/config_private.json').token;
@@ -23,8 +25,13 @@ client.on('error', console.error);
 client.on('warn', console.warn);
 
 client.once('ready', () => {
+	console.log('');
 	console.log(`Hello there, ${botAuthor}!`);
 	console.log(`${botName} is ready to launch in ${client.guilds.cache.size} servers :D`);
+	console.log('');
+	const now = new Date();
+	console.log(dateFormat(now, 'yyyy/hh/dd, HH:MM:ss (dddd)'));
+
 	client.user.setActivity('your commands ;)', { type: 'LISTENING' });
 });
 
@@ -32,8 +39,8 @@ client.on('message', async message => {
 
 
 	const prefixes = JSON.parse(fs.readFileSync('./data/prefixes.json', 'utf8'));
-	if (!prefixes[message.guild.id]) {
-		prefixes[message.guild.id] = {
+	if (!prefixes[message.channel.guild.id]) {
+		prefixes[message.channel.guild.id] = {
 			prefixes: require('./data/config.json').prefix,
 		};
 	}
@@ -52,7 +59,7 @@ client.on('message', async message => {
 	if (command.usable == false) return message.reply('this command is not usable.');
 
 	try {
-		command.execute(message, args);
+		command.execute(message, args, client);
 	}
 
 	catch (error) {

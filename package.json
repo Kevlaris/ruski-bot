@@ -1,6 +1,6 @@
 {
   "name": "ruskibot",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "A Bot for Ruskis",
   "main": "index.js",
   "keywords": [],
@@ -8,9 +8,11 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
+    "dateformat": "^3.0.3",
     "discord.js": "^12.2.0",
     "eslint": "^7.1.0",
     "ffmpeg-static": "^4.2.2",
+    "node-fetch": "^2.6.0",
     "random-puppy": "^1.1.0",
     "simple-youtube-api": "^5.2.1",
     "superagent": "^5.2.2",

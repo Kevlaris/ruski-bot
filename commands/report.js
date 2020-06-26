@@ -34,10 +34,13 @@ module.exports = {
 		const reports = message.client.reports;
 		const serverReports = reports.get(message.guild.id);
 
+		const date = message.createdAt;
+
 		const report = {
 			reported: member,
 			reportedBy: message.member,
 			reason: reason,
+			date: date,
 		};
 
 		if(serverReports) {
@@ -54,6 +57,7 @@ module.exports = {
 						{ name: 'Reported person', value: mentioned, inline: true },
 						{ name: 'Reported by', value: message.author, inline: true },
 						{ name: 'Channel', value: message.channel, inline: true },
+						{ name: 'Date', value: date, inline: true },
 						{ name: 'Reason', value: reason, inline: false },
 					)
 					.setFooter('Report Log');
@@ -84,6 +88,7 @@ module.exports = {
 					{ name: 'Reported person', value: mentioned, inline: true },
 					{ name: 'Reported by', value: message.author, inline: true },
 					{ name: 'Channel', value: message.channel, inline: true },
+					{ name: 'Date', value: date, inline: true },
 					{ name: 'Reason', value: reason, inline: false },
 				)
 				.setFooter('Report Log');

@@ -5,7 +5,7 @@ const { client } = require('../index.js');
 module.exports = {
 	name: 'meme',
 	description: 'Gives you a random meme from r/memes or r/dankmemes.',
-	async execute(message, args) {
+	async execute(message) {
 		const source = ['memes', 'dankmemes'];
 		const random = source[Math.floor(Math.random() * source.length)];
 
