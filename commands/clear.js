@@ -2,12 +2,12 @@ module.exports = {
 	name: 'clear',
 	description: 'Deletes messages.',
 	usage: '[number]',
-	aliases: ['purge', 'delete']
+	aliases: ['purge', 'delete'],
 	async execute(message, args) {
 		const amount = args[0];
-		
-		if (!message.member.hasPermission('MANAGE_MESSAGES' || 'MANAGE_SERVER' || 'ADMINISTRATOR') return message.reply('you don\'t have the permissions to delete messages.');
-		if (!message.channel.guild.me.hasPermission('MANAGE_MESSAGES') return message.reply('I don\'t have the proper permissions to delete messages.');
+
+		if (!message.member.hasPermission('MANAGE_MESSAGES' || 'MANAGE_SERVER' || 'ADMINISTRATOR')) return message.reply('you don\'t have the permissions to delete messages.');
+		if (!message.channel.guild.me.hasPermission('MANAGE_MESSAGES')) return message.reply('I don\'t have the proper permissions to delete messages.');
 
 		if (!amount) return message.reply('you haven\'t specified a number.');
 		if (isNaN(amount)) return message.reply('you haven\'t specified a number.');
@@ -16,11 +16,11 @@ module.exports = {
 		if (amount < 1) return message.reply('you have to delete at least 1 message!');
 
 		try {
-			const messages = await msg.channel.messages.fetch({ limit: amount + 1 });
- 			message.channel.bulkDelete(messages)
+			const messages = await message.channel.messages.fetch({ limit: amount });
+			message.channel.bulkDelete(messages);
 		}
 		catch (err) {
 			console.error(err);
 		}
-	}
-}
+	},
+};
