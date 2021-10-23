@@ -21,7 +21,7 @@ module.exports = class extends Client {
 			if (fs.readFileSync('./data/config_private.json', 'utf8')) this.config.private = fs.readFileSync('./data/config_private.json', 'utf8');
 		}
 		catch (err) {
-			console.warn(err)
+			console.warn(err);
 		}
 	}
 };
