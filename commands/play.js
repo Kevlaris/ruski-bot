@@ -2,11 +2,14 @@
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 let yt_api_key = process.env.yt_api_key;
+const fs = require('fs');
 
 if (yt_api_key == null) yt_api_key = require('../data/config_private.json').yt_api_key;
 
 const Discord = require('discord.js');
 const { client } = require('../index.js');
+const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus } = require('@discordjs/voice');
+const { join } = require('path');
 
 const yt = new YouTube(yt_api_key);
 
@@ -15,15 +18,17 @@ module.exports = {
 	description: 'Plays a Youtube video.',
 	usage: '[link]',
 	aliases: ['p', 'start'],
-	async execute(message, args) {
-		const searchString = args.slice(0).join(' ');
+	async execute(interaction, args) {
+		const searchString = args;
 		const url = args[0].replace(/<(.+)>/g, '$1');
 
-		const { channel } = message.member.voice;
-		if (!channel) return message.channel.send('You need to be in a voice channel to play music!');
-		const permissions = channel.permissionsFor(message.client.user);
-		if (!permissions.has('CONNECT')) return message.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!');
-		if (!permissions.has('SPEAK')) return message.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!');
+		const channel = await interaction.guild.channels.fetch('817283371406327828');
+		// console.log(channel);
+
+		if (!channel) return interaction.reply('You need to be in a voice channel to play music!');
+		// const permissions = channel.permissionsFor(interaction.client.user);
+		// if (!permissions.has('CONNECT')) return interaction.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!');
+		// if (!permissions.has('SPEAK')) return interaction.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!');
 
 		try {
 			var video = await yt.getVideo(url);
@@ -32,15 +37,15 @@ module.exports = {
 			try {
 				const videos = await yt.searchVideos(searchString, 1);
 				var video = await yt.getVideoByID(videos[0].id);
-				console.log(video);
+				// console.log(video);
 			}
 			catch (error) {
 				console.error(error);
-				return message.channel.send('I couldn\'t find any videos with that URL/name.');
+				return interaction.reply('I couldn\'t find any videos with that URL/name.');
 			}
 		}
 
-		var thumbnail;
+		let thumbnail;
 		if (!video.thumbnails.maxres) {
 			thumbnail = video.thumbnails.high;
 		}
@@ -48,7 +53,9 @@ module.exports = {
 			thumbnail = video.thumbnails.maxres;
 		}
 
-		const serverQueue = message.client.queue.get(message.guild.id);
+		// console.log(interaction.channel);
+
+		const serverQueue = interaction.client.queue.get(interaction.guild.id);
 		const song = {
 			id: video.id.replace(/^[a-zA-Z0-9-_]{11}$/),
 			title: video.title,
@@ -59,49 +66,53 @@ module.exports = {
 			lengthMinutes: video.duration.minutes,
 			lengthHours: video.duration.hours,
 		};
-		console.log(song);
+		// console.log(song);
 
 		if (serverQueue) {
 			serverQueue.songs.push(song);
 
 			const queueEmbed = new Discord.MessageEmbed()
-				.setAuthor(client.user.tag, client.user.avatarURL())
+				.setAuthor({ name: client.user.tag, iconURL: client.user.avatarURL() })
 				.setTitle(`✅ ${song.title} Has been added to the queue!`)
 				.setDescription(`Uploaded By: ${song.publisherChannel}`)
 				.setURL(song.url)
-				.setFooter(`Added by: ${message.author.tag}`, message.author.avatarURL());
+				.setFooter({ text: `Requested by: ${interaction.user.username}`, iconURL: interaction.user.avatarURL() });
 
-			return message.channel.send(queueEmbed);
+			return interaction.channel.reply({ embeds: [ queueEmbed ] });
 		}
 
 		const queueConstruct = {
-			textChannel: message.channel,
+			textChannel: interaction.client.guilds.resolve(interaction.guildId).channels.resolve(interaction.channelId),
 			voiceChannel: channel,
 			connection: null,
 			songs: [],
 			volume: 2,
 			playing: true,
 		};
-		message.client.queue.set(message.guild.id, queueConstruct);
+		interaction.client.queue.set(interaction.guildId, queueConstruct);
 		queueConstruct.songs.push(song);
 
 		const play = async song => {
-			const queue = message.client.queue.get(message.guild.id);
+			const queue = interaction.client.queue.get(interaction.guildId);
 			if (!song) {
-				queue.voiceChannel.leave();
-				message.client.queue.delete(message.guild.id);
+				player.stop();
+				queue.connection.destroy();
+				interaction.client.queue.delete(interaction.guildId);
 				return;
 			}
 
-			const dispatcher = queue.connection.play(ytdl(song.url))
-				.on('finish', () => {
-					queue.songs.shift();
-					play(queue.songs[0]);
-				})
-				.on('error', error => console.error(error));
-			// dispatcher.setVolumeLogarithmic(queue.volume / 5);
+			const player = await createAudioPlayer();
+			const resource = await createAudioResource(ytdl(song.url));
+			await queue.connection.subscribe(player);
+			await player.play(resource);
+			console.log(player);
 
-			var videoLength;
+			player.on(AudioPlayerStatus.Idle, () => {
+				queue.songs.shift();
+				play(queue.songs[0]);
+			});
+
+			let videoLength;
 			if (song.lengthSeconds) {
 				if (song.lengthMinutes) {
 					if(song.lengthHours) {
@@ -161,7 +172,7 @@ module.exports = {
 			}
 
 			const embed = new Discord.MessageEmbed()
-				.setAuthor(client.user.tag, client.user.avatarURL())
+				.setAuthor({ name: client.user.tag, iconURL: client.user.avatarURL() })
 				.setTitle(`🎶 Now playing: ${song.title}`)
 				.setDescription(`By: ${song.publisherChannel}`)
 				.setThumbnail(song.thumbnail)
@@ -169,22 +180,26 @@ module.exports = {
 				.addFields(
 					{ name: 'Duration', value: videoLength, inline: true },
 				)
-				.setFooter(`Requested by: ${message.author.username}`, message.author.avatarURL());
-
-
-			queue.textChannel.send(embed);
+				.setFooter({ text: `Requested by: ${interaction.user.username}`, iconURL: interaction.user.avatarURL() });
+			interaction.reply({ embeds: [ embed ] });
 		};
 
+		let connection;
+
 		try {
-			const connection = await channel.join();
+			connection = joinVoiceChannel({
+				channelId: '817283371406327828',
+				guildId: '624280910900232212',
+				adapterCreator: interaction.guild.voiceAdapterCreator,
+			});
 			queueConstruct.connection = connection;
 			play(queueConstruct.songs[0]);
 		}
 		catch (error) {
 			console.error(`I could not join the voice channel: ${error}`);
-			message.client.queue.delete(message.guild.id);
-			await channel.leave();
-			return message.channel.send('I could not join the voice channel');
+			interaction.client.queue.delete(interaction.guild.id);
+			await connection.destroy();
+			return interaction.channel.send('I could not join the voice channel');
 		}
 	},
 };

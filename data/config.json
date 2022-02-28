@@ -3,5 +3,6 @@
     "botName": "Ruski Bot",
     "botVersion": "1.1.9",
     "botAuthor": "Kevlaris",
-    "invLink": "https://discord.com/oauth2/authorize?client_id=668842700761726997&scope=bot&permissions=8"
+    "invLink": "https://discord.com/api/oauth2/authorize?client_id=668842700761726997&permissions=8&scope=bot%20applications.commands",
+    "testGuildId": "624280910900232212"
 }

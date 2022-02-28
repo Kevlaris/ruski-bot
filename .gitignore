@@ -3,3 +3,4 @@ package-lock.json
 start.bat
 .eslintrc.json
 config_private.json
+.env

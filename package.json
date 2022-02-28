@@ -7,16 +7,21 @@
   "author": "Kevlaris",
   "license": "MIT",
   "dependencies": {
-    "dateformat": "^3.0.3",
-    "discord.js": "^13.2.0",
     "@discordjs/opus": "^0.6.0",
+    "@discordjs/voice": "^0.8.0",
+    "dateformat": "^3.0.3",
+    "discord.js": "^13.6.0",
     "eslint": "^7.1.0",
-    "ffmpeg-static": "^4.2.2",
+    "ffmpeg-static": "^4.4.1",
+    "libsodium-wrappers": "^0.7.9",
     "node": "^17.0.1",
     "node-fetch": "^2.6.5",
+    "opusscript": "^0.0.8",
     "random-puppy": "^1.1.0",
     "simple-youtube-api": "^5.2.1",
     "superagent": "^5.2.2",
-    "ytdl-core": "^4.9.1"
+    "tweetnacl": "^1.0.3",
+    "ytdl": "^1.4.1",
+    "ytdl-core": "^4.10.1"
   }
 }
