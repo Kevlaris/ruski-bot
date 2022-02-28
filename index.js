@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { botName, botAuthor, testGuildId } = require('./data/config.json');
 const Discord = require('discord.js');
-const { Intents } = require('discord.js');
+const { Client, Intents } = require('discord.js');
 const dateFormat = require('dateformat');
 
 let token = process.env.token;
@@ -12,7 +12,7 @@ const botIntents = new Intents(Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIREC
 
 const botClient = require('./struct/Client');
 const { joinVoiceChannel } = require('@discordjs/voice');
-const client = new botClient({
+const client = new Client({
 	intents: [
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MESSAGES,
@@ -21,6 +21,7 @@ const client = new botClient({
 });
 module.exports = { client: client };
 
+/*
 client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -29,6 +30,7 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commandFiles.set(command.name, command);
 }
+*/
 
 client.on('error', console.error);
 client.on('warn', console.warn);
@@ -73,10 +75,10 @@ client.once('ready', () => {
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) { return; }
 
-	const { commandName, options } = interaction;
+	const { commandName } = interaction;
 
 	if (commandName === 'play') {
-		client.commandFiles.get('play').execute(interaction, options.getString('video'));
+		require('./play.js').execute(interaction);
 	}
 	else if (commandName === 'join') {
 		joinVoiceChannel({
