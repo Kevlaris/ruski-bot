@@ -9,16 +9,14 @@ let token = process.env.TOKEN;
 
 if (token == null) token = require('./data/config_private.json').token;
 
-const botIntents = new Intents(Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES);
+const botIntents = new Intents();
+botIntents.add(Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, 'GUILD_VOICE_STATES');
 
 const botClient = require('./struct/Client');
 const { joinVoiceChannel } = require('@discordjs/voice');
-const client = new botClient({
-	intents: [
-		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILD_VOICE_STATES,
-	],
+const { Player } = require('discord-player');
+const client = new Client({
+	intents: botIntents,
 	token: token,
 });
 module.exports = { client: client };
@@ -47,6 +45,8 @@ client.once('ready', () => {
 
 	client.user.setActivity('your commands ;)', { type: 'LISTENING' });
 
+	client.player = new Player(client);
+
 	let commands;
 	const testGuild = client.guilds.cache.get(testGuildId);
 	if (testGuild) {
@@ -68,10 +68,6 @@ client.once('ready', () => {
 			},
 		],
 	});
-	commands.create({
-		name: 'join',
-		description: 'Join a VC (debug)',
-	});
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -82,16 +78,7 @@ client.on('interactionCreate', async (interaction) => {
 	if (commandName === 'play') {
 		require('./play.js').execute(interaction);
 	}
-	else if (commandName === 'join') {
-		joinVoiceChannel({
-			channelId: '817283371406327828',
-			guildId: '624280910900232212',
-			adapterCreator: interaction.guild.voiceAdapterCreator,
-		});
-	}
 });
-
-client.player.on("trackStart", async (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
 
 /*
 client.on('messageCreate', (message) => {
