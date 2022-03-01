@@ -3,8 +3,9 @@ const { botName, botAuthor, testGuildId } = require('./data/config.json');
 const Discord = require('discord.js');
 const { Client, Intents } = require('discord.js');
 const dateFormat = require('dateformat');
+require('dotenv').config();
 
-let token = process.env.token;
+let token = process.env.TOKEN;
 
 if (token == null) token = require('./data/config_private.json').token;
 
@@ -12,12 +13,13 @@ const botIntents = new Intents(Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIREC
 
 const botClient = require('./struct/Client');
 const { joinVoiceChannel } = require('@discordjs/voice');
-const client = new Client({
+const client = new botClient({
 	intents: [
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MESSAGES,
 		Intents.FLAGS.GUILD_VOICE_STATES,
 	],
+	token: token,
 });
 module.exports = { client: client };
 
@@ -88,6 +90,8 @@ client.on('interactionCreate', async (interaction) => {
 		});
 	}
 });
+
+client.player.on("trackStart", async (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
 
 /*
 client.on('messageCreate', (message) => {

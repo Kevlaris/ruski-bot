@@ -1,3 +1,4 @@
+const { Player } = require('discord-player');
 const { Client, Intents } = require('discord.js');
 const fs = require('fs');
 
@@ -10,7 +11,7 @@ module.exports = class extends Client {
 
 		this.commandFiles = new Map();
 
-		this.queue = new Map();
+		this.player = new Player(this);
 
 		this.config = config;
 
