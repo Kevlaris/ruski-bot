@@ -13,11 +13,12 @@ const botIntents = new Intents();
 botIntents.add(Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, 'GUILD_VOICE_STATES');
 
 const botClient = require('./struct/Client');
-const { joinVoiceChannel } = require('@discordjs/voice');
 const { Player } = require('discord-player');
 const client = new Client({
 	intents: botIntents,
 	token: token,
+	shards: 'auto',
+	allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
 });
 module.exports = { client: client };
 
