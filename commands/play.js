@@ -1,6 +1,16 @@
 const { Player } = require('discord-player');
 
 module.exports = {
+	name: "play",
+	description: "Plays a video in a Voice Channel",
+	options: [
+		{
+			type: 3,
+			name: 'video',
+			description: 'Link or title of the video to be played',
+			required: true,
+		},
+	],
 	async execute(interaction) {
 		let player = interaction.client.player;
 		if (player == null) {

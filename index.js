@@ -2,6 +2,7 @@ const fs = require('fs');
 const { botName, botAuthor, testGuildId } = require('./data/config.json');
 const Discord = require('discord.js');
 const { Client, Intents } = require('discord.js');
+const { Player } = require('discord-player');
 const dateFormat = require('dateformat');
 require('dotenv').config();
 
@@ -12,26 +13,22 @@ if (token == null) token = require('./data/config_private.json').token;
 const botIntents = new Intents();
 botIntents.add(Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, 'GUILD_VOICE_STATES');
 
-const botClient = require('./struct/Client');
-const { Player } = require('discord-player');
+// const botClient = require('./struct/Client');
+
 const client = new Client({
 	intents: botIntents,
 	token: token,
 	shards: 'auto',
 	allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
 });
-module.exports = { client: client };
 
-/*
-client.commands = new Discord.Collection();
-
+const commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	client.commandFiles.set(command.name, command);
+	commands.set(command.name, command);
 }
-*/
 
 client.on('error', console.error);
 client.on('warn', console.warn);
@@ -39,36 +36,30 @@ client.on('warn', console.warn);
 client.once('ready', () => {
 	console.log('');
 	console.log(`Hello there, ${botAuthor}!`);
-	console.log(`${botName} is ready to launch in ${client.guilds.cache.size} servers :D`);
-	console.log('');
-	const now = new Date();
-	console.log(dateFormat(now, 'yyyy/hh/dd, HH:MM:ss (dddd)'));
+	console.log(`${botName} is ready to launch in ${client.guilds.cache.size} servers :D\n`);
+	console.log(dateFormat(new Date(), 'yyyy/hh/dd, HH:MM:ss (dddd)\n'));
 
 	client.user.setActivity('your commands ;)', { type: 'LISTENING' });
 
-	client.player = new Player(client);
+	const player = new Player(client);
+	module.exports = { player: player };
 
-	let commands;
+	const appCommands;
 	const testGuild = client.guilds.cache.get(testGuildId);
 	if (testGuild) {
-		commands = testGuild.commands;
+		appCommands = testGuild.commands;
 	}
 	else {
-		commands = client.application.commands;
+		appCommands = client.application.commands;
 	}
 
-	commands.create({
-		name: 'play',
-		description: 'Plays a YouTube video.',
-		options: [
-			{
-				type: 3,
-				name: 'video',
-				description: 'Link or title of the video to be played',
-				required: true,
-			},
-		],
-	});
+	for (const command of commands) {
+		appCommands.create({
+			name: command.name,
+			description: command.description,
+			options: command.options,
+		});
+	};
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -76,8 +67,10 @@ client.on('interactionCreate', async (interaction) => {
 
 	const { commandName } = interaction;
 
-	if (commandName === 'play') {
-		require('./play.js').execute(interaction);
+	try {
+		commands.get(commandName).execute(interaction);
+	} catch (error) {
+		console.error(error);
 	}
 });
 
