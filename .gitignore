@@ -4,3 +4,4 @@ start.bat
 .eslintrc.json
 config_private.json
 .env
+bot.txt

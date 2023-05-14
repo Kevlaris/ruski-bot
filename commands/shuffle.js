@@ -1,8 +1,8 @@
 const index = require('../index.js');
 
 module.exports = {
-	name: 'pause',
-	description: 'Pause current queue',
+	name: 'shuffle',
+	description: 'Shuffles current queue',
 	options: [],
 	async execute(interaction) {
 		const queue = await index.player.getQueue(interaction.guildId);
@@ -10,14 +10,13 @@ module.exports = {
 			return await interaction.reply({ content: 'Couldn\'t find queue in server' });
 		}
 
-		// interaction.deferReply();
 		try {
-			await queue.setPaused(true);
+			await queue.shuffle();
 		}
 		catch (error) {
 			console.error(error);
-			return await interaction.reply({ content: 'Couldn\'t pause queue' });
+			return await interaction.reply({ content: 'Couldn\'t shuffle queue' });
 		}
-		await interaction.reply({ content: 'Paused queue!' });
+		return await interaction.reply({ content: 'Shuffled queue!' });
 	},
 };

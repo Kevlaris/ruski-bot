@@ -26,45 +26,49 @@ module.exports = {
 			index.player = player;
 		}
 
-		let channel;
+		// let channel;
 
+		let channel;
 		try {
 			channel = interaction.options.get('channel').value;
 		}
 		catch (error) {
 			console.error(error);
+			channel = interaction.member.voice.channel;
 		}
 
-		if (!interaction.member.voice.channelId && !channel) return await interaction.reply({ content: 'You are not in a voice channel!', ephemeral: true });
+		if (!interaction.member.voice.channelId && !channel && !interaction.guild.me.voice.channelId) return await interaction.reply({ content: 'You are not in a voice channel!', ephemeral: true });
 		if (!channel && interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) return await interaction.reply({ content: 'You are not in my voice channel!', ephemeral: true });
 
-		let queue;
-		if (index.queues) { queue = index.queues.get(interaction.guildId); }
-		else { index.queues = new Discord.Collection(); }
+		let queue = player.getQueue(interaction.guildId);
 		if (!queue) {
 			queue = player.createQueue(interaction.guild, {
 				metadata: {
 					channel: interaction.channel,
 				},
 			});
-			index.queues.set(interaction.guildId, queue);
 		}
 
+
 		// verify vc connection
-		try {
-			if (!queue.connection) await queue.connect(interaction.member.voice.channel);
-		}
-		catch (err) {
-			console.error(err);
+		if (!queue.connection) {
 			try {
 				await queue.connect(channel);
 			}
-			catch (errr) {
-				queue.destroy();
-				queue.remove(interaction.guild);
-				console.error(errr);
-				return await interaction.reply({ content: 'Could not join your voice channel!', ephemeral: true });
+			catch (err) {
+				console.error(err);
+				try {
+					await queue.connect(channel);
+				}
+				catch (errr) {
+					queue.destroy();
+					console.error(errr);
+					return await interaction.reply({ content: 'Could not join your voice channel!', ephemeral: true });
+				}
 			}
+		}
+		else if (!channel) {
+			channel = queue.connection.channel;
 		}
 
 		const query = interaction.options.get('video').value;
@@ -77,8 +81,24 @@ module.exports = {
 		if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
 
 		queue.addTrack(track);
-		queue.play();
-
-		return await interaction.followUp({ content: `⏱️ | Loading track **${track.title}**!` });
+		if (!queue.nowPlaying() || queue.nowPlaying() == track) {
+			queue.play();
+			const embed = new Discord.MessageEmbed()
+				.setAuthor({ name: interaction.client.user.tag, iconURL: interaction.client.user.avatarURL() })
+				.setTitle(`🎶 Now playing: ${track.title}`)
+				.setDescription(`By: ${track.author}`)
+				.setThumbnail(track.thumbnail)
+				.setURL(track.url)
+				.addField('Duration', track.duration, true)
+				.setFooter({ text: `Requested by: ${track.requestedBy.username}`, iconURL: track.requestedBy.avatarURL() });
+			return await interaction.followUp({ embeds: [embed] });
+		}
+		else {
+			const embed = new Discord.MessageEmbed()
+				.setTitle(`Added ${track.title} to the queue!`)
+				.setThumbnail(track.thumbnail)
+				.setURL(track.url);
+			return await interaction.followUp({ embeds: [embed] });
+		}
 	},
 };

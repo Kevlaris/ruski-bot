@@ -24,6 +24,6 @@
     "superagent": "^5.2.2",
     "tweetnacl": "^1.0.3",
     "ytdl": "^1.4.1",
-    "ytdl-core": "^4.10.1"
+    "ytdl-core": "^4.11.0"
   }
 }
